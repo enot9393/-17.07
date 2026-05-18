@@ -13,7 +13,6 @@
     }
 
     body {
-      /* бледно‑розовый градиент */
       background: linear-gradient(-45deg, #fff5fb, #fde8f2, #f9dcf0, #ffe8f5);
       background-size: 400% 400%;
       animation: gradientBG 25s ease infinite;
@@ -22,7 +21,7 @@
       min-height: 100vh;
       padding: 20px 0;
       position: relative;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
     @keyframes gradientBG {
@@ -31,18 +30,17 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Плавающие цветочки */
     .flower {
       position: absolute;
       width: 18px;
       height: 18px;
       opacity: 0.45;
       pointer-events: none;
-      animation: floatFlower 7s ease-in-out infinite;
+      animation: floatFlower 8s ease-in-out infinite;
     }
-    .flower:nth-child(2n)  { opacity: 0.4;  }
-    .flower:nth-child(3n)  { opacity: 0.35; }
-    .flower:nth-child(4n)  { opacity: 0.5;  }
+    .flower:nth-child(2n)  { animation-delay: 1.5s; opacity: 0.4; }
+    .flower:nth-child(3n)  { animation-delay: 3s;   opacity: 0.35; }
+    .flower:nth-child(4n)  { animation-delay: 0.5s; opacity: 0.5; }
 
     @keyframes floatFlower {
       0% {
@@ -62,11 +60,21 @@
       }
     }
 
+    .flower-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
     .container {
       max-width: 900px;
       margin: 0 auto;
       padding: 20px;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.92);
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.15);
       position: relative;
@@ -127,6 +135,48 @@
     .about p {
       font-size: 1.1rem;
       color: #7a6a62;
+    }
+
+    /* Блок обратного отсчёта */
+    .countdown {
+      background: rgba(255, 252, 255, 0.95);
+      padding: 25px 20px;
+      border-radius: 16px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    .countdown h2 {
+      margin-bottom: 15px;
+      color: #e8a4d1;
+      font-size: 1.5rem;
+    }
+    .countdown-time {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .countdown-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 80px;
+    }
+    .countdown-item .value {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #e8a4d1;
+    }
+    .countdown-item .label {
+      font-size: 0.85rem;
+      color: #a86b87;
+      margin-top: 5px;
+    }
+    .countdown-finished {
+      color: #e8a4d1;
+      font-size: 1.1rem;
+      margin-top: 10px;
     }
 
     .schedule {
@@ -204,21 +254,11 @@
       color: #c995b8;
       font-size: 0.9rem;
     }
-
-    .flower-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-    }
   </style>
 </head>
 <body>
   <!-- Плавающие цветочки на фоне -->
-  <div class="flower-container" id="petals"></div>
+  <div class="flower-container" id="flowers"></div>
 
   <div class="container">
     <header>
@@ -240,23 +280,49 @@
     <div class="about">
       <p>
         Мы мечтали о простом, но очень тёплом и искреннем дне — 
-        чтобы рядом были вы, те, кого мы особенно ценим. 
+        чтобы рядом были вы, тех, кого мы особенно ценим. 
         Венчание — для нас не просто ритуал, 
         а начало нашей общей жизни, которую мы хотим наполнить 
         вашей любовью и поддержкой.
       </p>
     </div>
 
+    <!-- Блок обратного отсчёта до 19.07.2026 12:00 -->
+    <div class="countdown">
+      <h2>До нашего венчания осталось</h2>
+      <div class="countdown-time">
+        <div class="countdown-item">
+          <span id="days" class="value">00</span>
+          <span class="label">дней</span>
+        </div>
+        <div class="countdown-item">
+          <span id="hours" class="value">00</span>
+          <span class="label">часов</span>
+        </div>
+        <div class="countdown-item">
+          <span id="minutes" class="value">00</span>
+          <span class="label">минут</span>
+        </div>
+        <div class="countdown-item">
+          <span id="seconds" class="value">00</span>
+          <span class="label">секунд</span>
+        </div>
+      </div>
+      <div id="countdown-finished" class="countdown-finished"></div>
+    </div>
+
     <div class="schedule">
-      <h2>Расписание дня</h2>
+      <h2></h2>
       <ul class="event-list">
         <li>
-          <span class="event-time">19 июля, 12:00</span>
-          <span class="event-title">Венчание в церкви</span>
+          <span class="event-time">17 июля, 10:00</span>
+          <span class="event-title">Венчание</span>
+            <span class="event-title">храм РДЦ Николы Чудотворца, д. Ванькова</span>
         </li>
         <li>
-          <span class="event-time">19 июля, 17:00</span>
+          <span class="event-time">17 июля, 17:00</span>
           <span class="event-title">Вечерний пир</span>
+          <span class="event-title">д. Ванькова, ул. Новая, 14</span>
         </li>
       </ul>
     </div>
@@ -275,35 +341,62 @@
   </div>
 
   <script>
-    const container = document.getElementById("petals");
-    const count = 200; // число цветочков
+    // --- Цветы на фоне ---
+    const container = document.getElementById("flowers");
+    const count = 18;
 
     for (let i = 0; i < count; i++) {
       const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-      svg.setAttribute("viewBox", "0 0 16 16");
       svg.setAttribute("class", "flower");
       svg.setAttribute("width", "16");
       svg.setAttribute("height", "16");
-      svg.style.left = `${Math.random() * 100}%`;
-      svg.style.top = `${Math.random() * 100}%`;
-      svg.style.animationDelay = `${Math.random() * 5}s`;
-      svg.style.transform = `scale(${0.7 + Math.random() * 0.5})`;
+      svg.setAttribute("fill", "#e8a4d1");
 
-      // Простой цветок из кругов (носик‑сердцевина + лепестки)
       svg.innerHTML = `
-        <circle cx="8" cy="8" r="2" fill="#e8a4d1" />
-        <circle cx="5" cy="5" r="2.2" fill="#e8a4d1" />
-        <circle cx="11" cy="5" r="2.2" fill="#e8a4d1" />
-        <circle cx="5" cy="11" r="2.2" fill="#e8a4d1" />
-        <circle cx="11" cy="11" r="2.2" fill="#e8a4d1" />
-        <circle cx="8" cy="5" r="2.2" fill="#e8a4d1" />
-        <circle cx="8" cy="11" r="2.2" fill="#e8a4d1" />
-        <circle cx="5" cy="8" r="2.2" fill="#e8a4d1" />
-        <circle cx="11" cy="8" r="2.2" fill="#e8a4d1" />
+        <path d="M8 16a4 4 0 0 0 4-4 4 4 0 0 0 0-8 4 4 0 1 0 0 8 4 4 0 0 0 4 4m3-12q0 .11-.03.247c-.544.241-1.091.638-1.598 1.084A3 3 0 0 0 8 5c-.494 0-.96.12-1.372.331-.507-.446-1.054-.843-1.597-1.084A1 1 0 0 1 5 4a3 3 0 0 1 6 0m-.812 6.052A3 3 0 0 0 11 8a3 3 0 0 0-.812-2.052c.215-.18.432-.346.647-.487C11.34 5.131 11.732 5 12 5a3 3 0 1 1 0 6c-.268 0-.66-.13-1.165-.461a7 7 0 0 1-.647-.487m-3.56.617a3 3 0 0 0 2.744 0c.507.446 1.054.842 1.598 1.084q.03.137.03.247a3 3 0 1 1-6 0q0-.11.03-.247c.544-.242 1.091-.638 1.598-1.084m-.816-4.721A3 3 0 0 0 5 8c0 .794.308 1.516.812 2.052a7 7 0 0 1-.647.487C4.66 10.869 4.268 11 4 11a3 3 0 0 1 0-6c.268 0 .66.13 1.165.461.215.141.432.306.647.487M8 9a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
       `;
+
+      svg.style.left = `${Math.random() * 95}%`;
+      svg.style.top = `${Math.random() * 95}%`;
+      svg.style.transform = `scale(${0.6 + Math.random() * 0.8}) rotate(15deg)`;
 
       container.appendChild(svg);
     }
+
+    // --- Обратный отсчёт до 19.07.2026, 12:00 (по местному времени браузера) ---
+    const targetDate = new Date("2026-07-17T12:00:00").getTime();
+    const daysEl = document.getElementById("days");
+    const hoursEl = document.getElementById("hours");
+    const minutesEl = document.getElementById("minutes");
+    const secondsEl = document.getElementById("seconds");
+    const finishedEl = document.getElementById("countdown-finished");
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance < 0) {
+        daysEl.style.display = "none";
+        hoursEl.style.display = "none";
+        minutesEl.style.display = "none";
+        secondsEl.style.display = "none";
+        finishedEl.textContent = "Венчание уже прошло! ♥";
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      daysEl.textContent = String(days).padStart(2, "0");
+      hoursEl.textContent = String(hours).padStart(2, "0");
+      minutesEl.textContent = String(minutes).padStart(2, "0");
+      secondsEl.textContent = String(seconds).padStart(2, "0");
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
   </script>
 </body>
 </html>
